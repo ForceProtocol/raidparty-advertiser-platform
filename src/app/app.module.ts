@@ -3,12 +3,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
-import { AppComponent } from './app.component';
-import { AuthComponent } from './auth/auth.component';
-import { LoginComponent } from './auth/login/login.component';
-import { SignupComponent } from './auth/signup/signup.component';
-import { ForgotPasswordComponent } from './auth/forgot-password/forgot-password.component';
-
 import { AppRoutingModule } from './app-routing/app-routing.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -23,6 +17,12 @@ import { NotificationService } from './services/notification.service';
 import { HelperService } from './services/helper.service';
 
 
+import { HomeComponent } from './public/home.component';
+import { AppComponent } from './app.component';
+import { AuthComponent } from './auth/auth.component';
+import { LoginComponent } from './auth/login/login.component';
+import { SignupComponent } from './auth/signup/signup.component';
+import { ForgotPasswordComponent } from './auth/forgot-password/forgot-password.component';
 import { FooterComponent } from './headers/footer/footer.component';
 import { SideNavbarComponent } from './side-navbar/side-navbar.component';
 import { TopNavbarComponent } from './top-navbar/top-navbar.component';
@@ -38,10 +38,12 @@ import { FileUploadModule } from 'ng2-file-upload';
 import { NgTempusdominusBootstrapModule } from 'ngx-tempusdominus-bootstrap';
 
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
+import { ReCaptchaModule } from 'angular2-recaptcha';
 
 
 @NgModule({
   declarations: [
+    HomeComponent,
     AppComponent,
     AuthComponent,
     LoginComponent,
@@ -68,7 +70,8 @@ import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
     NgxSmartModalModule.forRoot(),
     FormsModule,
     NgTempusdominusBootstrapModule,
-    FileUploadModule
+    FileUploadModule,
+    ReCaptchaModule
   ],
   providers: [AuthService, UserService, GameService, GameAdAssetService, EventService, NotificationService, NgxSmartModalService, HelperService,
     { provide: HTTP_INTERCEPTORS, useClass: AppInterceptor, multi: true }],

@@ -38,6 +38,13 @@ export class AuthService implements CanActivate {
     }
   }
 
+  contact(params) {
+    return this.http.post(`${environment.API_HOST}/web/contact`, params)
+      .map((response) => {
+        return response;
+      });
+  }
+
   signup(params) {
     return this.http.post(`${environment.API_HOST}/web/advertiser/signup`, params)
       .map((response) => {
