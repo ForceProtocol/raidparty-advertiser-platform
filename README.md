@@ -16,7 +16,7 @@ Clear the cache first: sudo npm cache clear --force
 
 npm install
 
-To build the staging use sudo ng build --env=stag
+sudo ng build --aot --output-hashing=all --env=staging
 
 To build the production use sudo ng build -prod
 
