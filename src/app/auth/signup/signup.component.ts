@@ -18,6 +18,12 @@ export class SignupComponent implements OnInit {
     private auth: AuthService,
     private toaster: ToastrService,
     private router: Router) {
+    
+    const user = localStorage.getItem('user');
+    if (user) {
+      router.navigate(['/dashboard']);
+    }
+
     this.createForm();
   }
 

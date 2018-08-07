@@ -17,6 +17,11 @@ export class ActivateAccountComponent implements OnInit {
     private router: Router,
     private activatedRoute: ActivatedRoute
   ) {
+    const user = localStorage.getItem('user');
+    if (user) {
+      router.navigate(['/dashboard']);
+    }
+    
     this.params = this.activatedRoute.snapshot.queryParams;
   }
 
