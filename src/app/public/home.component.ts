@@ -44,7 +44,7 @@ export class HomeComponent implements OnInit {
   contact() {
 
     if(!this.captchaResponse){
-      this.toaster.error('Error', "You must check the captcha box", {
+      this.toaster.error("You must check the captcha box",'Error', {
           timeOut: 3000,
           positionClass: 'toast-center-center'
         });
@@ -63,7 +63,7 @@ export class HomeComponent implements OnInit {
         });
       },
       (errorObj) => {
-        this.toaster.error('Error', errorObj.error.err, {
+        this.toaster.error(errorObj.error.err,'Error', {
           timeOut: 3000,
           positionClass: 'toast-center-center'
         });

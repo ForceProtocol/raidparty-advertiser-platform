@@ -26,7 +26,7 @@ export class DashboardComponent implements OnInit {
       .subscribe((data) => {
           this.games = data['games'];
       }, errObj => {
-        this.toaster.error('Error', errObj.error.err, {
+        this.toaster.error(errObj.error.err,'Error', {
           timeOut: 3000,
           positionClass: 'toast-top-center'
         });

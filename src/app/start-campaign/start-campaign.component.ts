@@ -285,7 +285,7 @@ export class StartCampaignComponent implements OnInit, OnDestroy {
   * Handle any FileUploader Errors
   */
   handleFileUploadError(item:any, response:any, status:any, headers:any){
-    this.toaster.error('File Upload Error', "Your game advertisement asset was not uploaded", {
+    this.toaster.error("Your game advertisement asset was not uploaded", 'File Upload Error', {
       timeOut: 3000,
       positionClass: 'toast-top-center'
     });
@@ -303,14 +303,14 @@ export class StartCampaignComponent implements OnInit, OnDestroy {
 
       // Server did not upload the file
       if(status != 200){
-        this.toaster.error('File Upload Error', "Your game advertisement asset was not uploaded", {
+        this.toaster.error("Your game advertisement asset was not uploaded",'File Upload Error', {
           timeOut: 3000,
           positionClass: 'toast-top-center'
         });
       }
       // Server saved the file on disk and returns a fileName to be used
       else{
-        this.toaster.success('File Uploaded', "Your game advertisement asset was uploaded successfully", {
+        this.toaster.success("Your game advertisement asset was uploaded successfully",'File Uploaded', {
           timeOut: 3000,
           positionClass: 'toast-top-center'
         });
