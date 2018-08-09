@@ -133,7 +133,7 @@ export class StartCampaignComponent implements OnInit, OnDestroy {
   }
 
 
-    /**
+  /**
   * Get latest data for the selected game from the server
   */
   loadGameData(gameId,gameAdAssetId){
