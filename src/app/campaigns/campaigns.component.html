@@ -63,9 +63,9 @@
                         <a *ngIf="gameAdAsset.active" class="dropdown-item" (click)="open(pause,gameAdAsset.id,0)">Pause</a>
                         <a *ngIf="!gameAdAsset.active" class="dropdown-item" (click)="open(activate,gameAdAsset.id,1)">Activate</a>
                         <a class="dropdown-item" routerLink="/start-campaign/{{ gameAdAsset.game.id + '/' + gameAdAsset.id}}">Edit</a>
-                        <a *ngIf="campaignFilter == 'active'" class="dropdown-item" (click)="open(archive,gameAdAsset.id)">Archive Campaign</a>
-                        <a *ngIf="campaignFilter == 'archived'" class="dropdown-item" (click)="open(removeArchive,gameAdAsset.id)">Re-activate</a>
-                        <a *ngIf="campaignFilter == 'archived'" class="dropdown-item" (click)="open(delete,gameAdAsset.id)">Delete Campaign</a>
+                        <a *ngIf="campaignFilter == 'active'" class="dropdown-item danger" (click)="open(archive,gameAdAsset.id)">Archive Campaign</a>
+                        <a *ngIf="campaignFilter == 'archived'" class="dropdown-item danger" (click)="open(removeArchive,gameAdAsset.id)">Re-activate</a>
+                        <a *ngIf="campaignFilter == 'archived'" class="dropdown-item danger" (click)="open(delete,gameAdAsset.id)">Delete Campaign</a>
                       </div>
                     </div>
                   </td>

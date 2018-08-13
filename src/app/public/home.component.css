@@ -1,14 +1,9 @@
 a {
-    color: #fdcc52;
     -webkit-transition: all .35s;
     -moz-transition: all .35s;
     transition: all .35s
 }
 
-a:focus,
-a:hover {
-    color: #fcbd20
-}
 
 hr {
     max-width: 100px;

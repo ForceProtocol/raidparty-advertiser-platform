@@ -64,7 +64,7 @@ export class CampaignsComponent implements OnInit {
 
             // Format the exposure time in nice format
             if(this.gameAdAssets[key].totalExposure > 1){
-              this.gameAdAssets[key].totalExposure = moment.duration(this.gameAdAssets[key].totalExposure * 10, 'seconds').humanize();
+              this.gameAdAssets[key].totalExposure = moment.duration(this.gameAdAssets[key].totalExposure, 'seconds').humanize();
             }else{
               this.gameAdAssets[key].totalExposure = '0 seconds';
             }
