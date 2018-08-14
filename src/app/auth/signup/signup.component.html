@@ -9,7 +9,7 @@
             </a>
           </div>
 
-          <form [formGroup]="signupForm">
+          <form (keydown)="formSubmit($event)" [formGroup]="signupForm">
             <div class="alert alert-info">
               <p>This platform is currently in demo only mode. None of your campaigns will appear in live production games, nor will your
               advertising budget be used.</p>

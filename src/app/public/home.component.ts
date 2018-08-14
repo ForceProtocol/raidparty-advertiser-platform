@@ -4,6 +4,7 @@ import { AuthService } from '../services/auth.service';
 import { GameService } from '../services/game.service';
 import { EventService } from '../services/eventEmitter.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-home',
@@ -16,6 +17,7 @@ export class HomeComponent implements OnInit {
   contactForm: FormGroup;
   formSubmitted: boolean = false;
   captchaResponse: string;
+  API_HOST: string = environment.API_HOST;
 
   constructor(
     private fb: FormBuilder,
