@@ -32,4 +32,9 @@ export class UserService {
   }
 
 
+  getRegionList(){
+    return this.http.get(`${environment.API_HOST}/regions?token=${this.token}`)
+    .map(response => response);
+  }
+
 }

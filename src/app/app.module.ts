@@ -39,6 +39,7 @@ import { NgTempusdominusBootstrapModule } from 'ngx-tempusdominus-bootstrap';
 
 import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 import { ReCaptchaModule } from 'angular2-recaptcha';
+import { SelectDropDownModule } from 'ngx-select-dropdown';
 
 
 @NgModule({
@@ -71,7 +72,8 @@ import { ReCaptchaModule } from 'angular2-recaptcha';
     FormsModule,
     NgTempusdominusBootstrapModule,
     FileUploadModule,
-    ReCaptchaModule
+    ReCaptchaModule,
+    SelectDropDownModule
   ],
   providers: [AuthService, UserService, GameService, GameAdAssetService, EventService, NotificationService, NgxSmartModalService, HelperService,
     { provide: HTTP_INTERCEPTORS, useClass: AppInterceptor, multi: true }],

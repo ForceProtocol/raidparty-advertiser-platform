@@ -1,15 +1,17 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators, FormArray } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../services/auth.service';
 import { GameService } from '../services/game.service';
+import { UserService } from '../services/user.service';
 import { GameAdAssetService } from '../services/game-ad-asset.service';
 import { FileUploader, FileSelectDirective, FileLikeObject } from 'ng2-file-upload/ng2-file-upload';
 import { environment } from '../../environments/environment';
 import { NgTempusdominusBootstrapModule } from 'ngx-tempusdominus-bootstrap';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+import { SelectDropDownModule } from 'ngx-select-dropdown';
 import * as moment from 'moment';
 
 
@@ -31,7 +33,7 @@ export class StartCampaignComponent implements OnInit, OnDestroy {
   selectedGameAssetType: string;
   selectedGameAvgExposure: number;
   selectedGameAvgSession: number;
-  selectedGameExposurePercent: number;
+  selectedGameExposurePerSession: number;
   game: any;
   gameAdAsset: any;
   user: any;
@@ -50,6 +52,11 @@ export class StartCampaignComponent implements OnInit, OnDestroy {
   endDate: any;
   API_HOST: string;
   fileUploadKey: string;
+
+
+  regionList: any = [];
+  selectedRegions: any = [];
+  regionSearchConfig: object = {displayKey:"region",search:true};
 
   updateGameAdAsset: boolean = false;
   error: any;
@@ -78,6 +85,7 @@ export class StartCampaignComponent implements OnInit, OnDestroy {
     private titleService: Title,
     private auth: AuthService,
     private modalService: NgbModal,
+    private userService: UserService
   ) {
     const user = localStorage.getItem('user');
     if (user) {
@@ -88,6 +96,11 @@ export class StartCampaignComponent implements OnInit, OnDestroy {
     this.API_HOST = environment.API_HOST;
 
     this.createForm();
+
+    // Load list of countries/regions
+    this.userService.getRegionList().subscribe((data) => {
+      this.regionList = data;
+    });
   }
 
 
@@ -121,7 +134,7 @@ export class StartCampaignComponent implements OnInit, OnDestroy {
     this.selectedGameAssetScreenshot = environment.API_HOST + "/adverts/game-assets/screenshots/blank.png";
     this.selectedGameAvgExposure = 0;
     this.selectedGameAvgSession = 0;
-    this.selectedGameExposurePercent = 0;
+    this.selectedGameExposurePerSession = 0;
 
     // Initialise form File Uploads
     this.initFileUploads();
@@ -199,8 +212,34 @@ export class StartCampaignComponent implements OnInit, OnDestroy {
       resourceUrlImg: [''],
       startDate: ['', Validators.required],
       endDate: ['', Validators.required],
+      regions: this.fb.array([]),
     },{validator: this.validateAssetUploaded('resourceUrlHd', 'resourceUrlSd','resourceUrlImg')});
   }
+
+
+  regionSelected(event){
+    const control = <FormArray>this.campaignForm.controls['regions'];
+
+    // Clear any previous values stored
+    control.controls = [];
+
+    if(!event.value){
+      return false;
+    }
+
+    if(!event.value.length){
+      for(let i = control.length; i >= 0; i--) {
+        control.removeAt(i)
+      }
+    }
+
+    // iterate your object and pushes new values
+    event.value.forEach(region => {
+      control.push(this.fb.group(region));
+    })
+  }
+
+
 
 
   /**
@@ -215,6 +254,19 @@ export class StartCampaignComponent implements OnInit, OnDestroy {
 
       // Add the game ad asset ID to the form so we know what to update
       this.campaignForm.addControl('gameAdAssetId',new FormControl(['',Validators.required]));
+
+      // Need to map the regions associated with this game ad asset, to match the regions list structure
+      // So that the region form search list displays correctly
+      this.gameAdAsset.gameAdAssetRegion = this.gameAdAsset.gameAdAssetRegion.map(gameAdAssetRegion => {
+        return this.regionList.filter(region => {
+          return region.id == gameAdAssetRegion.region;
+        })[0];
+      });
+
+      // Set Regions to form control
+      this.regionSelected({value:this.gameAdAsset.gameAdAssetRegion});
+      this.selectedRegions = this.gameAdAsset.gameAdAssetRegion;
+
 
       // Set Default Values from loaded game ad asset
       this.campaignForm.controls['resourceUrlHd'].setValue(this.gameAdAsset.resourceUrlHd);
@@ -317,7 +369,7 @@ export class StartCampaignComponent implements OnInit, OnDestroy {
 
         // Input file item uploaded was item.options.additionalParameter.fileInputName
         this.campaignForm.controls[item.options.additionalParameter.inputValueTarget].setValue(response.fileName);
-        this[item.options.additionalParameter.inputValueTarget] = response.fileName;
+        this[item.options.additionalParameter.inputValueTarget] = response.filePublicPath;
       }
   }
 
@@ -391,8 +443,6 @@ export class StartCampaignComponent implements OnInit, OnDestroy {
     this.campaignForm.value.gameId = this.gameId;
     this.campaignForm.value.active = true;
 
-    console.log("this campaign form values: ",this.campaignForm.value);
-
     this.gameAdAssetService.updateCampaign(this.gameAdAsset.id,this.campaignForm.value)
       .subscribe((data) => {
         this.toaster.success("Your advertisement campaign was updated successfully. You will need to await for the game owner to approve your advert before it goes live.", 'Campaign Updated', {
@@ -415,15 +465,19 @@ export class StartCampaignComponent implements OnInit, OnDestroy {
     var selectedGameAsset = this.gameAssets.filter(value => value.id === parseInt(gameAssetId));
     this.campaignForm.controls['gameAsset'].setValue(gameAssetId);
 
+    this.gameAdAssetService.getGameAssetSessionStats(gameAssetId)
+    .subscribe((data) => {
+      this.selectedGameAvgExposure = data['exposedTime'];
+      this.selectedGameAvgSession = data['sessionTime'];
+      this.selectedGameExposurePerSession = data['avgSession'];
+    });
+
     this.selectedGameAssetTitle = selectedGameAsset[0].title;
     this.selectedGameAssetDescription = selectedGameAsset[0].description;
     this.selectedGameAssetHeight = selectedGameAsset[0].height;
     this.selectedGameAssetWidth = selectedGameAsset[0].width;
     this.selectedGameAssetSample = environment.API_HOST + "/web/advertiser/download?item=" + encodeURI(selectedGameAsset[0].sample);
     this.selectedGameAssetType = selectedGameAsset[0].type;
-    this.selectedGameAvgExposure = selectedGameAsset[0].avgExposure;
-    this.selectedGameAvgSession = selectedGameAsset[0].avgSession;
-    this.selectedGameExposurePercent = (this.selectedGameAvgExposure / this.selectedGameAvgSession) * 100;
 
     this.width = this.selectedGameAssetWidth;
     this.height = this.selectedGameAssetHeight;
@@ -462,5 +516,6 @@ export class StartCampaignComponent implements OnInit, OnDestroy {
         }
       });
     }
+
 
 }

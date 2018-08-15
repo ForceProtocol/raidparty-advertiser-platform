@@ -47,6 +47,15 @@ export class GameAdAssetService {
 
 
   /**
+  * Get session summary info for a particular game asset
+  */
+  getGameAssetSessionStats(gameAssetId){
+    return this.http.get(`${environment.API_HOST}/game/game-assets/session-stats/${gameAssetId}?token=${this.token}`)
+    .map(response => response);
+  }
+
+
+  /**
   * Get an individual game ad asset (advertisers campaign)
   */
   getGameAdAsset(gameAdAssetId){

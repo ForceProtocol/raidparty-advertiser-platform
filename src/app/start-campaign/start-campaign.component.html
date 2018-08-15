@@ -185,6 +185,8 @@
 
                     </fieldset>
 
+
+
                     <fieldset *ngIf="selectedGameAssetType == 'screen' && selectedGameAssetType" class="form-group">
                       <legend class="pt-0">Video Dimensions</legend>
                       <div class="form-group">
@@ -195,16 +197,18 @@
                       </div>
                     </fieldset>
 
+
+
                     <fieldset *ngIf="selectedGameAssetType" class="form-group">
                       <legend class="pt-0">Advert Budget</legend>
-                      <label for="inlineFormInputGroup">Bid Amount</label>
+                      <label for="inlineFormInputGroup">Bid Amount (CPM)</label>
                       <div class="input-group mb-2">
                         <div class="input-group-prepend">
                           <div class="input-group-text">&#36;</div>
                         </div>
                         <input [(ngModel)]="maxBid" type="number" class="form-control" placeholder="Bid Amount" formControlName="maxBid">
                       </div>
-                      <label class="inlineFormInputGroup"><small>How much are you prepared to pay per 10 minute advert exposure?</small></label>
+                      <label class="inlineFormInputGroup"><small>How much are you prepared to pay per 1,000 impressions?</small></label>
 
                       <br />
 
@@ -223,6 +227,26 @@
                             <p>Your advert will have approximately: {{ 10 * (dailyBudget / maxBid) }} mins exposure time per day</p>
                           </div>
                         </div>
+
+                    </fieldset>
+
+
+
+                    <fieldset *ngIf="selectedGameAssetType" class="form-group">
+                      <legend class="pt-0">Location</legend>
+
+                      <label for="inlineFormInputGroup">Select the locations of where you want your campaign to be shown.</label>
+
+                      <ngx-select-dropdown (change)="regionSelected($event)" [config]="regionSearchConfig" [options]="regionList" [(value)]="selectedRegions" [multiple]="true"></ngx-select-dropdown>
+
+                      <label for="inlineFormInputGroup"><small>If you do not chose any location, your campaign will run globally</small></label>
+
+                      <br />
+
+                      <div *ngIf="selectedRegions.length" class="selected-regions alert alert-dark">
+                        <p>Selected Regions:</p>
+                        <p><small><strong><span *ngFor="let region of selectedRegions;let last = last;">{{region.region}}<span *ngIf="!last">,</span> </span></strong></small></p>
+                      </div>
 
                     </fieldset>
 
@@ -264,8 +288,8 @@
                       <table class="table table-hover">
                         <tbody>
                           <tr>
-                            <th><i ngbTooltip="Average Exposure is how many seconds your advert will be viewed by a single player, in a single game session." class="fa fa-question-circle"></i> Avg. Exposure:</th>
-                            <td>{{selectedGameAvgExposure + ' seconds / ' + selectedGameAvgSession + ' seconds ('}} {{ selectedGameExposurePercent | number : '1.0-2'}} &#37;)</td>
+                            <th><i ngbTooltip="Est. Session is a representation of the adverts potential exposure per unique game session for this placement." class="fa fa-question-circle"></i> Est. Session:</th>
+                            <td>{{selectedGameExposurePerSession}} seconds</td>
                           </tr>
                           <tr>
                             <th>Width:</th>
